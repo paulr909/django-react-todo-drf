@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { baseUrl } from "./utils/baseUrl";
+import { getCookie } from "./utils/getCookie";
 import "./App.css";
 
 const App = () => {
-  const baseUrl = "http://127.0.0.1:8000/api/";
   const [todoList, setTodoList] = useState([]);
   const [editing, setEditing] = useState(false);
   const [activeItem, setActiveItem] = useState({
@@ -10,22 +11,6 @@ const App = () => {
     id: null,
     title: "",
   });
-
-  const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      let cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        let cookie = cookies[i].trim();
-        // check cookie string begins with the name we want?
-        if (cookie.substring(0, name.length + 1) === name + "=") {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  };
 
   useEffect(() => {
     fetchTasks();
