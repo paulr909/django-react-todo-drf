@@ -17,7 +17,7 @@ const App = () => {
       let cookies = document.cookie.split(";");
       for (let i = 0; i < cookies.length; i++) {
         let cookie = cookies[i].trim();
-        // Does this cookie string begin with the name we want?
+        // check cookie string begins with the name we want?
         if (cookie.substring(0, name.length + 1) === name + "=") {
           cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
           break;
@@ -32,7 +32,7 @@ const App = () => {
   }, []);
 
   const fetchTasks = () => {
-    fetch(`${baseUrl}task-list/`)
+    fetch(`${baseUrl}`)
       .then((response) => response.json())
       .then((data) => setTodoList(data));
   };
@@ -47,35 +47,73 @@ const App = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     let csrftoken = getCookie("csrftoken");
-    let url = `${baseUrl}task-create/`;
+    let url = `${baseUrl}`;
 
-    if (editing === true) {
-      url = `${baseUrl}task-update/${activeItem.id}/`;
-      setEditing(false);
+    if (editing === false) {
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          "X-CSRFToken": csrftoken,
+        },
+        body: JSON.stringify(activeItem),
+      })
+        .then((response) => {
+          fetchTasks();
+          setActiveItem({
+            id: null,
+            title: "",
+            completed: false,
+          });
+        })
+        .catch(function (error) {
+          console.log("ERROR:", error);
+        });
     }
 
+    if (editing === true) {
+      url = `${baseUrl}update/${activeItem.id}/`;
+      setEditing(false);
+      fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+          "X-CSRFToken": csrftoken,
+        },
+        body: JSON.stringify(activeItem),
+      })
+        .then((response) => {
+          fetchTasks();
+          setActiveItem({
+            id: null,
+            title: "",
+            completed: false,
+          });
+        })
+        .catch(function (error) {
+          console.log("ERROR EDITING:", error);
+        });
+    }
+  };
+
+  const handleStrike = (task) => {
+    task.completed = !task.completed;
+    let csrftoken = getCookie("csrftoken");
+    let url = `${baseUrl}strike/${task.id}/`;
+
     fetch(url, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-type": "application/json",
         "X-CSRFToken": csrftoken,
       },
-      body: JSON.stringify(activeItem),
-    })
-      .then((response) => {
-        fetchTasks();
-        setActiveItem({
-          id: null,
-          title: "",
-          completed: false,
-        });
-      })
-      .catch(function (error) {
-        console.log("ERROR:", error);
-      });
+      body: JSON.stringify({ completed: task.completed, title: task.title }),
+    }).then(() => {
+      fetchTasks();
+    });
   };
 
-  const handleEdit = (task) => {
+  const handleUpdate = (task) => {
     setActiveItem(task);
     setEditing(true);
   };
@@ -83,30 +121,13 @@ const App = () => {
   const handleDelete = (task) => {
     let csrftoken = getCookie("csrftoken");
 
-    fetch(`${baseUrl}task-delete/${task.id}/`, {
+    fetch(`${baseUrl}delete/${task.id}/`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",
         "X-CSRFToken": csrftoken,
       },
     }).then((response) => {
-      fetchTasks();
-    });
-  };
-
-  const handleStrike = (task) => {
-    task.completed = !task.completed;
-    let csrftoken = getCookie("csrftoken");
-    let url = `${baseUrl}task-update/${task.id}/`;
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-        "X-CSRFToken": csrftoken,
-      },
-      body: JSON.stringify({ completed: task.completed, title: task.title }),
-    }).then(() => {
       fetchTasks();
     });
   };
@@ -153,7 +174,7 @@ const App = () => {
                 </div>
                 <div style={{ flex: 1 }}>
                   <button
-                    onClick={() => handleEdit(task)}
+                    onClick={() => handleUpdate(task)}
                     className="btn btn-sm btn-outline-info"
                   >
                     Edit

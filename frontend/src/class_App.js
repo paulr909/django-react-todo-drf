@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 
-class ClassApp extends React.Component {
+class Class_App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -219,4 +219,4 @@ class ClassApp extends React.Component {
   }
 }
 
-export default ClassApp;
+export default Class_App;
