@@ -1,7 +1,7 @@
-# Django React Todo DRF App
-
-[![Python Version](https://img.shields.io/badge/python-3.6-brightgreen.svg)](https://python.org)
+[![Python Version](https://img.shields.io/badge/python-3.8-brightgreen.svg)](https://python.org)
 [![Django Version](https://img.shields.io/badge/django-3.0.5-brightgreen.svg)](https://djangoproject.com)
+
+# Django React Todo DRF App
 
 Run your app in a Virtual Environment: http://python-guide-ru.readthedocs.io/en/latest/dev/virtualenvs.html
 
