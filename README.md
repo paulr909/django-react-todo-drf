@@ -5,18 +5,18 @@
 
 Run your app in a Virtual Environment: http://python-guide-ru.readthedocs.io/en/latest/dev/virtualenvs.html
 
-```bash
+```
 git clone https://paulrogers@bitbucket.org/paulrogers/django-react-todo-drf.git
 ```
 
 Install the requirements:
 
-```bash
+```
 pip install -r requirements.txt
 ```
 
 Run the development server:
 
-```bash
+```
 python manage.py runserver
 ```
