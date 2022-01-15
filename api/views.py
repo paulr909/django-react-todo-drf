@@ -1,6 +1,7 @@
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
-from .serializers import TaskSerializer
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+
 from .models import Task
+from .serializers import TaskSerializer
 
 
 class TaskListCreateAPIView(ListCreateAPIView):
